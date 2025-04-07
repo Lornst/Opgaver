@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Player {
@@ -8,11 +9,32 @@ public class Player {
     private int playerCoorX;
     private int playerCoorY;
 
-    Player(String playerName, int playerScore, int playerCoorX, int playerCoorY){
-        this.playerName = playerName;
-        this.playerScore = playerScore;
-        this.playerCoorX = playerCoorX;
-        this.playerCoorY = playerCoorY;
+    Player(){
+        initAttributes();
+    }
+
+    void initAttributes(){
+        File file = new File("Files/init.ini");
+        Scanner scanner = null;
+        HashMap<String,String> initData = new HashMap<String,String>();
+        String[] lineSplitArray;
+
+        try {
+            scanner = new Scanner(file);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        while(scanner.hasNextLine()){
+            lineSplitArray = scanner.nextLine().split("=", 2);
+
+            initData.put(lineSplitArray[0],lineSplitArray[1]);
+        }
+
+        playerName = initData.get("playerName");
+        playerScore = Integer.parseInt(initData.get("playerScore"));
+        playerCoorX = Integer.parseInt(initData.get("playerCoorX"));
+        playerCoorY = Integer.parseInt(initData.get("playerCoorY"));
     }
 
     String getPlayerName(){
